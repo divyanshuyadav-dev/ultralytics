@@ -18,7 +18,7 @@ class SCAM(nn.Module):
         )
 
     def forward(self, x):
-        print(f"[SCAM] Input shape: {x.shape}")
+        # print(f"[SCAM] Input shape: {x.shape}")
         # Channel Attention
         ca = self.channel_att(x)
         x = x * ca
@@ -30,5 +30,5 @@ class SCAM(nn.Module):
         sa = self.spatial_att(sa_input)
         x = x * sa
 
-        print(f"[SCAM] Output shape: {x.shape}")
+        # print(f"[SCAM] Output shape: {x.shape}")
         return x
