@@ -69,6 +69,7 @@ from ultralytics.nn.modules import (
     YOLOESegment,
     v10Detect,
 )
+from ultralytics.nn.modules.attention import SCAM
 from ultralytics.utils import DEFAULT_CFG_DICT, DEFAULT_CFG_KEYS, LOGGER, YAML, colorstr, emojis
 from ultralytics.utils.checks import check_requirements, check_suffix, check_yaml
 from ultralytics.utils.loss import (
@@ -1745,6 +1746,20 @@ def parse_model(d, ch, verbose=True):
         if i == 0:
             ch = []
         ch.append(c2)
+
+        if i == 5:
+            # Inject SCAM inside a Sequential block, right after layer i
+            base = layers.pop()  # remove last added layer temporarily
+            scam = SCAM(c2)
+            scam.i, scam.f, scam.type = f"{i}_scam", i, 'SCAM'
+            scam.np = sum(p.numel() for p in scam.parameters())
+
+            combined = torch.nn.Sequential(base, scam)
+            combined.i, combined.f, combined.type = i, f, f'{t}+SCAM'
+            combined.np = base.np + scam.np
+
+            layers.append(combined)  # replace with combined block
+
     return torch.nn.Sequential(*layers), sorted(save)
 
 
