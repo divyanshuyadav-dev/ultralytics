@@ -1,7 +1,7 @@
 from ultralytics import YOLO
 from ultralytics.nn.modules.attention import SCAM
 
-model = YOLO("yolov8n.yaml")
+model = YOLO("yolov8n.pt")
 
 
 # Freeze all layers except SCAM layers

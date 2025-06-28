@@ -7,7 +7,8 @@ import csv
 # # Predict on one image
 
 # # Load your trained model
-model = YOLO("runs/train/scam_finetune_pigface6/weights/best.pt")
+# model = YOLO("runs/train/scam_finetune_pigface6/weights/best.pt")
+model = YOLO("yolov8n.pt")
 
 # # Predict on one image
 # results = model("ultralytics/datasets/pig_face/valid/images/5_frame_0010_jpg.rf.69928a1153aaa0e00f360d89f55b7da5.jpg", save=True, conf=0.25)
