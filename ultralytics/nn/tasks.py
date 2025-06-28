@@ -91,6 +91,8 @@ from ultralytics.utils.torch_utils import (
     smart_inference_mode,
     time_sync,
 )
+from ultralytics.nn.modules.attention_pruning_block import AttentionPruningBlock
+globals()["AttentionPruningBlock"] = AttentionPruningBlock
 
 
 class BaseModel(torch.nn.Module):
@@ -1568,7 +1570,7 @@ def attempt_load_one_weight(weight, device=None, inplace=True, fuse=False):
     # Return model and ckpt
     return model, ckpt
 
-
+# from modules.attention_pruning_block import AttentionPruningBlock
 def parse_model(d, ch, verbose=True):
     """
     Parse a YOLO model.yaml dictionary into a PyTorch model.
@@ -1647,8 +1649,6 @@ def parse_model(d, ch, verbose=True):
         {
             BottleneckCSP,
             C1,
-            C2,
-            C2f,
             C3k2,
             C2fAttn,
             C3,
@@ -1745,6 +1745,19 @@ def parse_model(d, ch, verbose=True):
         if i == 0:
             ch = []
         ch.append(c2)
+        if i == 21:
+            # Inject SCAM inside a Sequential block, right after layer i
+            base = layers.pop()  # remove last added layer temporarily
+            scam = AttentionPruningBlock(c2)
+            scam.i, scam.f, scam.type = f"{i}_scam", i, 'SCAM'
+            scam.np = sum(p.numel() for p in scam.parameters())
+
+            combined = torch.nn.Sequential(base, scam)
+            combined.i, combined.f, combined.type = i, f, f'{t}+SCAM'
+            combined.np = base.np + scam.np
+
+            layers.append(combined)  # replace with combined block
+
     return torch.nn.Sequential(*layers), sorted(save)
 
 

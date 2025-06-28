@@ -1,0 +1,14 @@
+path: ../ultralytics/ultralytics/datasets/pig_face
+train: train/images
+val: valid/images
+# test: ../test/images
+
+nc: 1
+names: ['Face']
+
+roboflow:
+  workspace: pig-uhw7s
+  project: pig_face-pij3p
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/pig-uhw7s/pig_face-pij3p/dataset/1
