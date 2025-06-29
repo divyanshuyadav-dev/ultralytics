@@ -1,13 +1,9 @@
 from ultralytics import YOLO
-from ultralytics.nn.modules.attention_pruning_block import AttentionPruningBlock
-import csv
-
-# model = YOLO("yolov8n.yaml")
-
-# # Predict on one image
 
 # # Load your trained model
 model = YOLO("runs/train/<?>/weights/best.pt")
+
+# load the vanilla YOLOv8 model
 # model = YOLO("yolov8n.pt")
 
 # # Predict on one image
@@ -37,29 +33,24 @@ metrics = model.val(data="ultralytics/datasets/pig_face/data.yaml")
 # -----------------------------
 csv_path = "runs/detect/val/eval_results.csv"
 
-with open(csv_path, "w", newline='') as f:
-    writer = csv.writer(f)
-
-    # Write headline row
-    writer.writerow(["metric", "value"])
-
-    # Core results (mAP, precision, recall, fitness)
-    for key, val in metrics.results_dict.items():
-        writer.writerow([key, float(val)])
-
-    # AP class mapping (class IDs that got mAP)
-    writer.writerow([])
-    writer.writerow(["AP class index", ", ".join(map(str, metrics.ap_class_index.tolist()))])
-
-    # Class names
-    writer.writerow([])
-    writer.writerow(["Classes"])
-    for cls_id, name in metrics.names.items():
-        writer.writerow([cls_id, name])
-
-    # Speeds
-    writer.writerow([])
-    writer.writerow(["Speed Type", "ms per image"])
-    for k, v in metrics.speed.items():
-        writer.writerow([k, round(v, 2)])
+def save_metrics_to_csv(metrics, csv_path):
+    import csv
+    with open(csv_path, "w", newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(["metric", "value"])
+        for key, val in metrics.results_dict.items():
+            writer.writerow([key, float(val)])
+        writer.writerow([])
+        writer.writerow(["AP class index", ", ".join(map(str, metrics.ap_class_index.tolist()))])
+        writer.writerow([])
+        writer.writerow(["Classes"])
+        for cls_id, name in metrics.names.items():
+            writer.writerow([cls_id, name])
+        writer.writerow([])
+        writer.writerow(["Speed Type", "ms per image"])
+        for k, v in metrics.speed.items():
+            writer.writerow([k, round(v, 2)])
     print(f"results saved to {csv_path}")
+
+# Usage
+save_metrics_to_csv(metrics, "runs/detect/val/eval_results.csv")
