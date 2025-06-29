@@ -1,6 +1,8 @@
 from ultralytics import YOLO
 from ultralytics.nn.modules.attention_pruning_block import AttentionPruningBlock
-model = YOLO("yolov8n.pt")
+model = YOLO("yolov8n.yaml")
+# Load the pre-trained weights
+model.load("yolov8n.pt")  # This will load weights where possible
 
 
 # Freeze all layers except SCAM layers
@@ -14,6 +16,7 @@ for m in model.model.modules():
         for param in m.parameters():
             param.requires_grad = True
 
+# print(model)
 
 # # Count trainable parameters
 # trainable_params = sum(p.numel() for p in model.model.parameters() if p.requires_grad)
