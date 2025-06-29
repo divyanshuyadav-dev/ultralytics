@@ -1,0 +1,14 @@
+path: ../ultralytics/ultralytics/datasets/pig_face_abhi
+train: train/images
+val: valid/images
+# test: ../test/images
+
+nc: 1
+names: ['Face']
+
+roboflow:
+  workspace: pig-face
+  project: pig-zsqs6
+  version: 5
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/pig-face/pig-zsqs6/dataset/5

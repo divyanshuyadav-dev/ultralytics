@@ -62,7 +62,7 @@ for name, param in model.model.named_parameters():
 
 # Load the pre-trained weights
 model.train(
-    data='ultralytics/datasets/pig_face/data.yaml',
+    data='ultralytics/datasets/pig_face_abhi/data.yaml',
     # epochs=50,
     # imgsz=640,
     # batch=16,

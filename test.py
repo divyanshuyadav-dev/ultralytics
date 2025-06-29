@@ -25,7 +25,7 @@ model = YOLO("runs/train/<?>/weights/best.pt")
 
 # 2. Evaluate on dataset (val/test split defined in data.yaml)
 # -----------------------------
-metrics = model.val(data="ultralytics/datasets/pig_face/data.yaml")
+metrics = model.val(data="ultralytics/datasets/pig_face_abhi/data.yaml")
 
 
 # -----------------------------
