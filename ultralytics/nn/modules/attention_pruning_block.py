@@ -23,7 +23,10 @@ class AttentionPruningBlock(nn.Module):
         x_cat = torch.cat([x1, x2], dim=1)
         x_red = self.reduce(x_cat)
         # apply pruning mask
-        return x_red * self.prune.view(1, -1, 1, 1)
+        pruned = x_red * self.prune.view(1, -1, 1, 1)
+        #element-wise multiplication with input
+        out = pruned * x
+        return out
 
 class SpatialChannelAttention(nn.Module):
     """
