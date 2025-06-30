@@ -63,13 +63,13 @@ for name, param in model.model.named_parameters():
 # Load the pre-trained weights
 model.train(
     data='ultralytics/datasets/pig_face_abhi/data.yaml',
-    # epochs=50,
-    # imgsz=640,
-    # batch=16,
-    epochs=10,             # reduce from 50
-    imgsz=416,             # reduce from 640
-    batch=4,               # reduce from 16
-    workers=0,             # force CPU safe behavior
-    name='scam_finetune_pigface',
+    epochs=50,
+    imgsz=640,
+    batch=16,
+    # epochs=10,             # reduce from 50
+    # imgsz=416,             # reduce from 640
+    # batch=4,               # reduce from 16
+    # workers=0,             # force CPU safe behavior
+    name='finetune_pigface',
     project='runs/train'
 )
