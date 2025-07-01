@@ -16,6 +16,22 @@ for m in model.model.modules():
             param.requires_grad = True
 
 
+# Important: use the raw model.model, not the YOLO wrapper
+core_model = model.model
+core_model.eval()
+
+# Use input tensor on CPU
+input_tensor = torch.randn(1, 3, 640, 640)
+
+# Use fvcore to calculate FLOPs and Params
+flops = FlopCountAnalysis(core_model, input_tensor)
+print(f"Total FLOPs: {flops.total() / 1e9:.2f} GFLOPs")
+
+
+# Trainable parameters
+trainable_params = sum(p.numel() for p in core_model.parameters())
+print(f"Trainable Parameters: {trainable_params / 1e6:.2f} Million")
+
 
 # # Count trainable parameters
 # trainable_params = sum(p.numel() for p in model.model.parameters() if p.requires_grad)
